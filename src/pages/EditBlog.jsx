@@ -114,6 +114,9 @@ if(error){
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value={"Technology"}>Technology</option>
+            <option value={"Health"}>Health</option>
+            <option value={"Finance"}>Finance</option>
+
             <option value={"General"}>General</option>
           </select>
           <div

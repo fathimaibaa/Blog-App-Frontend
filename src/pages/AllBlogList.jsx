@@ -48,13 +48,15 @@ function AllBlogList() {
 
     if (filterBy) {
       updatedPosts = updatedPosts.filter(
-        (post) => post.category.toLowerCase() === filterBy.toLowerCase()
+        (post) =>
+          post.category && post.category.toLowerCase() === filterBy.toLowerCase()
       );
     }
 
     if (sortBy) {
       updatedPosts.sort((a, b) => {
         if (sortBy === "date") {
+          // Ensure date is in the correct format
           return new Date(b.date) - new Date(a.date); // Descending order by date
         }
         if (sortBy === "title") {

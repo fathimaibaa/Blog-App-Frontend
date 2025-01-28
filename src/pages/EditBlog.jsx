@@ -8,15 +8,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 
 function EditBlog() {
-    const {id} = useParams()
-    const [postdata,setPostData] = useState(null)
+  const { id } = useParams();
+  const [postdata, setPostData] = useState(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const quillRef = useRef(null);
   const textEditorRef = useRef(null);
-  const {loading,error,data,apiCall} = useAxios()
+  const { loading, error, data, apiCall } = useAxios();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!textEditorRef.current) {
       const options = {
@@ -35,45 +36,46 @@ function EditBlog() {
     }
   }, []);
 
-  useEffect(()=>{
-    apiCall(`/post/${id}`)
-  },[])
+  // Fetch post data for editing
+  useEffect(() => {
+    apiCall(`/post/${id}`);
+  }, [id]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (data?.success) {
-        const { title, category, thumbnail, content } = data.post;
-        setTitle(title);
-        setCategory(category);
-        setThumbnail(thumbnail);
-        
-  
-       
-        if (content) {
-          const deltaContent = JSON.parse(content); 
-          textEditorRef.current.setContents(deltaContent);
-        }
-        return;
+      const { title, category, thumbnail, content } = data.post;
+      setTitle(title);
+      setCategory(category);
+      setThumbnail(thumbnail);
+
+      if (content) {
+        const deltaContent = JSON.parse(content);
+        textEditorRef.current.setContents(deltaContent);
       }
-if(error){
-    toast.error(error)
-}
-  },[data,error])
+      return;
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+  }, [data, error]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!title || !category || !thumbnail) {
-    //   toast.error("Fill All Fields");
-    //   return;
-    // }
+    if (!title || !category || !thumbnail) {
+      toast.error("Fill All Fields");
+      return;
+    }
+
     const editorContent = textEditorRef.current;
     const { ops } = editorContent.getContents();
-    console.log(ops, "ksksk");
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
     formData.append("thumbnail", thumbnail);
     formData.append("content", JSON.stringify(ops));
-    formData.append('postId',id)
+    formData.append('postId', id);
 
     try {
       const response = await axiosInstance.put("/editpost", formData, {
@@ -82,27 +84,31 @@ if(error){
         },
       });
       const { success, message } = response.data;
-      if (success && message === "blog created") {
-        toast.success("blog created");
+      if (success && message === "blog updated") { // Adjusted message for editing
+        toast.success("Blog updated successfully");
         navigate("/");
+      } else {
+        toast.error("Failed to update blog");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Something went wrong");
     }
   };
+
   return (
     <>
       <Navbar />
-      <div className="mt-[5.1rem] w-full flex justify-center items-center ">
+      <div className="mt-[5.1rem] w-full flex justify-center items-center">
         <form
           action=""
-          className=" w-1/2  flex flex-col gap-3 justify-center  "
+          className="w-1/2 flex flex-col gap-3 justify-center"
           onSubmit={handleSubmit}
         >
           <input
             type="text"
             autoFocus
-            className="outline-none border-2 border-black p-1 placeholder:text-black "
+            className="outline-none border-2 border-black p-1 placeholder:text-black"
             placeholder="  Title........."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -111,23 +117,21 @@ if(error){
             name=""
             id=""
             className="border-2 border-black"
+            value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value={"Technology"}>Technology</option>
-            <option value={"Health"}>Health</option>
-            <option value={"Finance"}>Finance</option>
-
-            <option value={"General"}>General</option>
+            <option value="Technology">Technology</option>
+            <option value="Health">Health</option>
+            <option value="Finance">Finance</option>
+            <option value="General">General</option>
           </select>
           <div
-            className=" border-2 border-black h-[15rem] overflow-y-scroll"
+            className="border-2 border-black h-[15rem] overflow-y-scroll"
             id="editor"
             ref={quillRef}
           ></div>
           <input
             type="file"
-            name=""
-            id=""
             onChange={(e) => setThumbnail(e.target.files[0])}
           />
           <button className="p-2 bg-[#1570EF] text-white rounded-sm">

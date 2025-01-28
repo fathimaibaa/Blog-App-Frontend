@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import BlogList from "../components/Blog/BlogList";
-import { axiosInstance } from "../utils/axios";
 import useAxios from "../hooks/useAxios";
 import toast from "react-hot-toast";
 
@@ -37,7 +36,7 @@ function AllBlogList() {
     }
   }, [data, error]);
 
-  // Handle Search
+  // Handle Search, Filter, and Sort
   useEffect(() => {
     let updatedPosts = [...allposts];
     if (search) {
@@ -51,10 +50,10 @@ function AllBlogList() {
     if (sortBy) {
       updatedPosts.sort((a, b) => {
         if (sortBy === "date") {
-          return new Date(b.date) - new Date(a.date);
+          return new Date(b.date) - new Date(a.date); // Descending order
         }
         if (sortBy === "title") {
-          return a.title.localeCompare(b.title);
+          return a.title.localeCompare(b.title); // Alphabetical order
         }
         return 0;
       });
@@ -72,64 +71,79 @@ function AllBlogList() {
   return (
     <>
       <Navbar />
-      <div className="mt-[6rem] w-full flex flex-col items-center gap-[2rem]">
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Search blogs..."
-          className="p-2 border rounded"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="mt-24 w-full px-4 flex flex-col items-center gap-6">
+        {/* Filters Section */}
+        <div className="w-full max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search blogs..."
+            className="w-full sm:w-1/3 p-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
-        {/* Sort */}
-        <select
-          className="p-2 border rounded"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="">Sort By</option>
-          <option value="date">Date</option>
-          <option value="title">Title</option>
-        </select>
+          {/* Filter */}
+          <select
+            className="w-full sm:w-1/3 p-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+          >
+            <option value="">Filter By Category</option>
+            <option value="Technology">Technology</option>
+            <option value="Health">Health</option>
+            <option value="Finance">Finance</option>
+          </select>
 
-        {/* Filter */}
-        <select
-          className="p-2 border rounded"
-          value={filterBy}
-          onChange={(e) => setFilterBy(e.target.value)}
-        >
-          <option value="">Filter By Category</option>
-          <option value="Technology">Technology</option>
-          <option value="Health">Health</option>
-          <option value="Finance">Finance</option>
-        </select>
+          {/* Sort */}
+          <select
+            className="w-full sm:w-1/3 p-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="">Sort By</option>
+            <option value="date">Date</option>
+            <option value="title">Title</option>
+          </select>
+        </div>
 
         {/* Blog List */}
-        {loading ? (
-          <div>..........Loading</div>
-        ) : (
-          <>
-            {currentPosts.map((post) => (
-              <BlogList key={post._id} post={post} />
-            ))}
-          </>
-        )}
+        <div className="w-full max-w-3xl">
+          {loading ? (
+            <div className="text-center text-lg font-medium">Loading...</div>
+          ) : (
+            <div className="grid gap-6">
+              {currentPosts.length > 0 ? (
+                currentPosts.map((post) => (
+                  <BlogList key={post._id} post={post} />
+                ))
+              ) : (
+                <div className="text-center text-gray-500">
+                  No blogs found.
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Pagination */}
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              className={`p-2 border rounded ${
-                currentPage === index + 1 ? "bg-blue-500 text-white" : ""
-              }`}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+        {totalPages > 1 && (
+          <div className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                className={`p-2 border rounded-lg shadow ${
+                  currentPage === index + 1
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-600"
+                } hover:bg-blue-100`}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

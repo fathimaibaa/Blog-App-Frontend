@@ -5,7 +5,7 @@ import useAxios from "../hooks/useAxios";
 import toast from "react-hot-toast";
 
 function AllBlogList() {
-  const [allposts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("");
@@ -28,7 +28,7 @@ function AllBlogList() {
 
   useEffect(() => {
     if (data?.success) {
-      setPosts(data.posts);
+      setAllPosts(data.posts);
       setFilteredPosts(data.posts);
     }
     if (error) {
@@ -38,28 +38,34 @@ function AllBlogList() {
 
   // Handle Search, Filter, and Sort
   useEffect(() => {
-    let updatedPosts = [...allposts];
+    let updatedPosts = [...allPosts];
+
     if (search) {
       updatedPosts = updatedPosts.filter((post) =>
         post.title.toLowerCase().includes(search.toLowerCase())
       );
     }
+
     if (filterBy) {
-      updatedPosts = updatedPosts.filter((post) => post.category === filterBy);
+      updatedPosts = updatedPosts.filter(
+        (post) => post.category.toLowerCase() === filterBy.toLowerCase()
+      );
     }
+
     if (sortBy) {
       updatedPosts.sort((a, b) => {
         if (sortBy === "date") {
-          return new Date(b.date) - new Date(a.date); // Descending order
+          return new Date(b.date) - new Date(a.date); // Descending order by date
         }
         if (sortBy === "title") {
-          return a.title.localeCompare(b.title); // Alphabetical order
+          return a.title.localeCompare(b.title); // Alphabetical order by title
         }
         return 0;
       });
     }
+
     setFilteredPosts(updatedPosts);
-  }, [search, sortBy, filterBy, allposts]);
+  }, [search, sortBy, filterBy, allPosts]);
 
   // Handle Pagination
   const indexOfLastPost = currentPage * postsPerPage;
@@ -71,23 +77,29 @@ function AllBlogList() {
   return (
     <>
       <Navbar />
-      <div className="mt-24 w-full px-4 flex flex-col items-center gap-6">
+      <div className="mt-20 w-full px-4 flex flex-col items-center gap-8">
         {/* Filters Section */}
-        <div className="w-full max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-100 p-4 rounded-lg shadow-md">
           {/* Search */}
           <input
             type="text"
             placeholder="Search blogs..."
             className="w-full sm:w-1/3 p-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1); // Reset to first page
+            }}
           />
 
           {/* Filter */}
           <select
             className="w-full sm:w-1/3 p-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
+            onChange={(e) => {
+              setFilterBy(e.target.value);
+              setCurrentPage(1); // Reset to first page
+            }}
           >
             <option value="">Filter By Category</option>
             <option value="Technology">Technology</option>
@@ -108,11 +120,11 @@ function AllBlogList() {
         </div>
 
         {/* Blog List */}
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-4xl grid gap-6">
           {loading ? (
             <div className="text-center text-lg font-medium">Loading...</div>
           ) : (
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {currentPosts.length > 0 ? (
                 currentPosts.map((post) => (
                   <BlogList key={post._id} post={post} />

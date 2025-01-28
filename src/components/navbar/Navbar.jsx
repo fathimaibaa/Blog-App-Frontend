@@ -12,6 +12,11 @@ function Navbar() {
     navigate("/login", { replace: true }); // Redirect to the login page
   };
 
+  // Login function
+  const handleLogin = () => {
+    navigate("/login"); // Redirect to the login page
+  };
+
   return (
     <div className="w-full h-[5rem] bg-green-700 flex justify-between items-center px-8 fixed inset-0 z-40">
       {/* Navigation Links */}
@@ -21,12 +26,20 @@ function Navbar() {
         <NavLink to={"/myblogs"}>Profile</NavLink>
       </div>
       {/* Logout Button (Visible only if user is logged in) */}
-      {user && (
+      {user ? (
         <button
           onClick={handleLogout}
           className="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all"
         >
           Logout
+        </button>
+      ) : (
+        // Login Button (Visible only if user is not logged in)
+        <button
+          onClick={handleLogin}
+          className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all"
+        >
+          Login
         </button>
       )}
     </div>

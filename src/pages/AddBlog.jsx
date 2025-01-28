@@ -86,6 +86,10 @@ function AddBlog() {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value={"Technology"}>Technology</option>
+            <option value={"Technology"}>Health</option>
+            <option value={"Technology"}>Finance</option>
+
+
             <option value={"General"}>General</option>
           </select>
           <div

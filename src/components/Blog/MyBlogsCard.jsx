@@ -34,7 +34,7 @@ function MyBlogsCard({post,myposts,setMyposts}) {
     <div className="w-[75%] flex items-center justify-center gap-6 ml-6">
       <Link
         className="p-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 w-[4rem] text-center"
-        to="/"
+        to={`/fullarticle/${post._id}`}
       >
         View
       </Link>

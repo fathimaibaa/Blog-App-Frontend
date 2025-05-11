@@ -34,11 +34,11 @@ function Route() {
         },
         {
             path: '/allblogs',
-            element: <ProtectedRoute><AllBlogList /></ProtectedRoute>
+            element: <AllBlogList />
         },
         {
             path: '/fullarticle/:id',
-            element: <ProtectedRoute><Blog /></ProtectedRoute>
+            element: <Blog />
         },
         {
             path: '/myblogs',

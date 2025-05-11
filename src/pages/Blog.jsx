@@ -38,17 +38,22 @@ function Blog() {
     <>
       <Navbar />
       <div className="w-full mt-[6.5rem] flex flex-col justify-center items-center gap-[3rem]">
-      { allData && <><div className="w-full flex justify-center" ><img src={allData?.thumbnail} alt="" className="w-1/2  object-fit" /></div>
-        <div className="w-1/2"><h1 className="text-4xl font-bold break-words">{allData?.title}</h1></div></>}
-        <p className="text-sm text-gray-500 mt-2">
-    Published on: {new Date(allData.createdAt).toLocaleString("en-US", {
-  dateStyle: "medium",
-  timeStyle: "short",
-})
-}
-  </p>
-        <div className="ql-editor w-[70%]">{parse(htmlContent)}</div>
-      </div>
+      { allData ? (
+  <>
+    <div className="w-full flex justify-center">
+      <img src={allData.thumbnail} alt="" className="w-1/2 object-fit" />
+    </div>
+    <div className="w-1/2">
+      <h1 className="text-4xl font-bold break-words">{allData.title}</h1>
+      <p className="text-sm text-gray-500 mt-2">
+        Published on: {new Date(allData.createdAt).toLocaleString()}
+      </p>
+    </div>
+  </>
+) : (
+  <p>Loading blog post...</p>
+)}
+</div>
     </>
   );
 }

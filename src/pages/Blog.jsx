@@ -21,7 +21,11 @@ function Blog() {
         
         setAllData(post)
         const delta = JSON.parse(post.content);
-        const convertor = new QuillDeltaToHtmlConverter(delta, {});
+       const convertor = new QuillDeltaToHtmlConverter(delta, {
+  classPrefix: "ql",       // This ensures Quill classes like ql-size-huge are preserved
+  inlineStyles: false,     // Use class-based styling (so Quill CSS can apply)
+});
+
         const html = convertor.convert();
         const sanitizeContent = DOMPurify.sanitize(html);
         setMainContet(post);
@@ -51,6 +55,7 @@ function Blog() {
       <div className="ql-editor">
   {parse(htmlContent)}
 </div>
+
 
 
     </div>

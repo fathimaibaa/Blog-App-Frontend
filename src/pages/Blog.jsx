@@ -48,6 +48,10 @@ function Blog() {
       <p className="text-sm text-gray-500 mt-2">
         Published on: {new Date(allData.createdAt).toLocaleString()}
       </p>
+      <div className="w-1/2 mt-4 prose max-w-none">
+  {parse(htmlContent)}
+</div>
+
     </div>
   </>
 ) : (

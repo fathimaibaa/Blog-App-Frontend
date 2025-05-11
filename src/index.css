@@ -5,3 +5,12 @@
 body{
   font-family:"Hahmlet", serif;;
 }
+/* In your global CSS or Blog.css */
+.ql-editor {
+  padding: 1rem;
+  line-height: 1.8;
+}
+
+.ql-editor p {
+  margin-bottom: 1rem;
+}

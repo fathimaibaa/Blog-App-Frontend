@@ -52,9 +52,10 @@ function Blog() {
       <p className="text-sm text-gray-500 mt-2">
         Published on: {new Date(allData.createdAt).toLocaleString()}
       </p>
-      <div className="ql-editor">
-  {parse(htmlContent)}
+      <div className="ql-snow">
+  <div className="ql-editor">{parse(htmlContent)}</div>
 </div>
+
 
 
 

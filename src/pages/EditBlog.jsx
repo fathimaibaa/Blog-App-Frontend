@@ -101,43 +101,75 @@ function EditBlog() {
       <Navbar />
       <div className="mt-[5.1rem] w-full flex justify-center items-center">
         <form
-          action=""
-          className="w-1/2 flex flex-col gap-3 justify-center"
-          onSubmit={handleSubmit}
-        >
-          <input
-            type="text"
-            autoFocus
-            className="outline-none border-2 border-black p-1 placeholder:text-black"
-            placeholder="  Title........."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <select
-            name=""
-            id=""
-            className="border-2 border-black"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="Technology">Technology</option>
-            <option value="Health">Health</option>
-            <option value="Finance">Finance</option>
-            <option value="General">General</option>
-          </select>
-          <div
-            className="border-2 border-black h-[15rem] overflow-y-scroll"
-            id="editor"
-            ref={quillRef}
-          ></div>
-          <input
-            type="file"
-            onChange={(e) => setThumbnail(e.target.files[0])}
-          />
-          <button className="p-2 bg-[#1570EF] text-white rounded-sm">
-            Save
-          </button>
-        </form>
+  className="w-1/2 flex flex-col gap-3 justify-center"
+  onSubmit={handleSubmit}
+>
+  <input
+    type="text"
+    autoFocus
+    className="outline-none border-2 border-black p-1 placeholder:text-black"
+    placeholder="  Title........."
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+  />
+
+  <select
+    className="border-2 border-black"
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+  >
+    <option value="Technology">Technology</option>
+    <option value="Health">Health</option>
+    <option value="Finance">Finance</option>
+    <option value="General">General</option>
+  </select>
+
+  <div
+    className="border-2 border-black h-[15rem] overflow-y-scroll"
+    id="editor"
+    ref={quillRef}
+  ></div>
+
+  {/* Display existing thumbnail image if editing and no new image is selected */}
+  {thumbnail && typeof thumbnail === "string" && (
+    <div>
+      <p className="text-sm text-gray-600 mb-1">Current Thumbnail:</p>
+      <img
+        src={thumbnail}
+        alt="Current Thumbnail"
+        className="w-[200px] h-auto border rounded mb-2"
+      />
+    </div>
+  )}
+
+  {/* Display preview of new image if user selects one */}
+  {thumbnail && typeof thumbnail === "object" && (
+    <div>
+      <p className="text-sm text-gray-600 mb-1">New Thumbnail Preview:</p>
+      <img
+        src={URL.createObjectURL(thumbnail)}
+        alt="New Thumbnail"
+        className="w-[200px] h-auto border rounded mb-2"
+      />
+    </div>
+  )}
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file) {
+        setThumbnail(file);
+      }
+    }}
+  />
+
+  <button className="p-2 bg-[#1570EF] text-white rounded-sm">
+    Save
+  </button>
+</form>
+
       </div>
     </>
   );
